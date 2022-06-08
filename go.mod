@@ -1,4 +1,4 @@
-module github.com/rclone/ftp
+module github.com/cogniteev/ftp
 
 go 1.14
 

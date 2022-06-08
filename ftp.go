@@ -30,6 +30,8 @@ const (
 // Time format used by the MDTM and MFMT commands
 const timeFormat = "20060102150405"
 
+var ErrNotSupported = errors.New("Not supported by remote FTP server")
+
 // ServerConn represents the connection to a remote FTP server.
 // A single connection only supports one in-flight data connection.
 // It is not safe to be called concurrently.
@@ -654,9 +656,10 @@ func (c *ServerConn) List(path string) (entries []*Entry, err error) {
 	return entries, err
 }
 
-func (c *ServerConn) GetEntryInfo(path string) (entry *Entry, err error) {
+// Stat issues an MLST command which returns info for a single entry
+func (c *ServerConn) Stat(path string) (entry *Entry, err error) {
 	if !c.mlstSupported {
-		return nil, errors.New("GetEntryInfo is not supported")
+		return nil, ErrNotSupported
 	}
 
 	cmd := "MLST"
